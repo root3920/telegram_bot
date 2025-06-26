@@ -37,14 +37,38 @@ intentos_codigo = {}
 
 # === MENSAJES PERSONALIZADOS POR CURSO ===
 MENSAJES_FINAL = {
-    "curso_mente": "✅ Acceso otorgado a Membresía Mente Cuántica.",
-    "curso_googlear": "✅ Acceso otorgado a Método Googlear al Inconsciente.",
-    "curso_guerreros": "✅ Acceso otorgado a Especialización Guerreros Galácticos.",
-    "curso_avanzadas": "✅ Acceso otorgado a Clases Avanzadas.",
-    "curso_qmm360": "✅ Acceso otorgado a Formación QMM 360.",
-    "curso_diplomatura": "✅ Acceso otorgado a Diplomatura QM-M.",
+    "curso_mente": (
+        "✅ Acceso otorgado a Membresía Mente Cuántica.\n"
+        "Ingresa con este enlace:\n"
+        "https://t.me/+nK7IjKHXsHw3NzIx"
+    ),
+    "curso_googlear": (
+        "✅ Acceso otorgado a Método Googlear al Inconsciente (#25).\n"
+        "Ingresa con este enlace:\n"
+        "https://t.me/+E2OZLu95-qIxMWRh"
+    ),
+    "curso_guerreros": (
+        "✅ Acceso otorgado a Especialización Guerreros Galácticos.\n"
+        "Ingresa con este enlace:\n"
+        "https://t.me/+uuRFBU2cDG4yOWRh"
+    ),
+    "curso_avanzadas": (
+        "✅ Acceso otorgado a Clases Avanzadas.\n"
+        "Ingresa con este enlace:\n"
+        "https://t.me/+Pdkdc4Jc2Zo3OThh"
+    ),
+    "curso_qmm360": (
+        "✅ Acceso otorgado a Formación QMM 360.\n"
+        "Ingresa con este enlace:\n"
+        "https://t.me/+NzM3K8X9MfwyMDhh"
+    ),
+    "curso_diplomatura": (
+        "✅ Acceso otorgado a Diplomatura QM-M.\n"
+        "Ingresa con este enlace:\n"
+        "https://t.me/+6d8N1Si4N0EwMTMx"
+    ),
     "curso_herramientas": (
-        "✅ Acceso otorgado a Las 8 Herramientas.\n"
+        "✅ Acceso otorgado a Las 8 Herramientas (#31).\n"
         "Ingresa con este enlace:\n"
         "https://t.me/+eJF-LF5Mq8AwNDMx"
     )
