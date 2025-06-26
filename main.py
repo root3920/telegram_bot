@@ -21,7 +21,7 @@ TAG_ID = os.getenv("TAG_ID")
 AUTOMATION_ID = int(os.getenv("AUTOMATION_ID"))
 
 # === ESTADOS DE CONVERSACIÓN ===
-ASK_EMAIL, ASK_CODIGO, ASK_EMAIL_CONFIRMACION = range(3)
+ASK_EMAIL, ASK_CODIGO, ASK_EMAIL_CONFIRMACION, ASK_GRUPO_HERRAMIENTAS = range(4)
 
 # === VARIABLES TEMPORALES ===
 codigo_temp = {}
@@ -169,6 +169,22 @@ async def recibir_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("❌ Error con ActiveCampaign. Intenta más tarde.")
         return ConversationHandler.END
 
+# === MOSTRAR MENÚ DE GRUPOS DE 8 HERRAMIENTAS ===
+async def seleccionar_grupo_herramientas(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [InlineKeyboardButton("Las 8 Herramientas (#27)", url="https://t.me/+kdclZgGhr5JhMTkx")],
+        [InlineKeyboardButton("Las 8 Herramientas (#28)", url="https://t.me/+tFJ3rECCPuAxMTAx")],
+        [InlineKeyboardButton("Las 8 Herramientas (#29)", url="https://t.me/+SRSGg3cA8wVkOWNh")],
+        [InlineKeyboardButton("Las 8 Herramientas (#30)", url="https://t.me/+t3l__l5gEbk0ZWIx")],
+        [InlineKeyboardButton("Las 8 Herramientas (#31)", url="https://t.me/+eJF-LF5Mq8AwNDMx")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(
+        "🎯 Escoge el grupo de 8 Herramientas al que perteneces:",
+        reply_markup=reply_markup
+    )
+    return ConversationHandler.END
+
 # === VERIFICACIÓN DEL CÓDIGO CON 3 INTENTOS ===
 async def verificar_codigo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
@@ -177,11 +193,14 @@ async def verificar_codigo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mensaje_final = MENSAJES_FINAL.get(curso_id, "✅ Acceso otorgado.")
 
     if user_id in codigo_temp and codigo_usuario == codigo_temp[user_id]:
-        await update.message.reply_text(mensaje_final)
         codigo_temp.pop(user_id, None)
-        curso_seleccionado.pop(user_id, None)
         intentos_codigo.pop(user_id, None)
-        return ConversationHandler.END
+        if curso_id == "curso_herramientas":
+            return await seleccionar_grupo_herramientas(update, context)
+        else:
+            await update.message.reply_text(mensaje_final)
+            curso_seleccionado.pop(user_id, None)
+            return ConversationHandler.END
     else:
         intentos_codigo[user_id] += 1
         if intentos_codigo[user_id] >= 3:
@@ -226,6 +245,7 @@ conv_handler = ConversationHandler(
         ASK_EMAIL_CONFIRMACION: [MessageHandler(filters.TEXT & ~filters.COMMAND, confirmar_nuevo_correo)],
     },
     fallbacks=[CommandHandler("cancel", cancel)],
+    per_message=True  # ✅ Solución al warning
 )
 
 application.add_handler(CommandHandler("start", start_command))
