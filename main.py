@@ -28,39 +28,23 @@ codigo_temp = {}
 curso_seleccionado = {}
 intentos_codigo = {}
 
-# === MENSAJES PERSONALIZADOS POR CURSO ===
+# === MENSAJES PERSONALIZADOS POR CURSO (si no hay submenú) ===
 MENSAJES_FINAL = {
     "curso_mente": (
         "✅ Acceso otorgado a Membresía Mente Cuántica.\n"
         "Ingresa con este enlace:\n"
         "https://t.me/+nK7IjKHXsHw3NzIx"
     ),
-    "curso_googlear": (
-        "✅ Acceso otorgado a Método Googlear al Inconsciente (#25).\n"
-        "Ingresa con este enlace:\n"
-        "https://t.me/+E2OZLu95-qIxMWRh"
-    ),
-    "curso_guerreros": (
-        "✅ Acceso otorgado a Especialización Guerreros Galácticos.\n"
-        "Ingresa con este enlace:\n"
-        "https://t.me/+uuRFBU2cDG4yOWRh"
-    ),
-    "curso_avanzadas": (
-        "✅ Acceso otorgado a Clases Avanzadas.\n"
-        "Ingresa con este enlace:\n"
-        "https://t.me/+Pdkdc4Jc2Zo3OThh"
-    ),
-    "curso_qmm360": (
-        "✅ Acceso otorgado a Formación QMM 360.\n"
-        "Ingresa con este enlace:\n"
-        "https://t.me/+NzM3K8X9MfwyMDhh"
-    ),
     "curso_diplomatura": (
         "✅ Acceso otorgado a Diplomatura QM-M.\n"
         "Ingresa con este enlace:\n"
         "https://t.me/+6d8N1Si4N0EwMTMx"
     ),
-    "curso_herramientas": None  # Este curso mostrará menú personalizado
+    "curso_avanzadas": (
+        "✅ Acceso otorgado a Clases Avanzadas.\n"
+        "Ingresa con este enlace:\n"
+        "https://t.me/+Pdkdc4Jc2Zo3OThh"
+    )
 }
 
 # === FUNCIONES ACTIVE CAMPAIGN ===
@@ -112,7 +96,8 @@ async def canales_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Selecciona el curso para ingresar al canal de Telegram:", reply_markup=reply_markup
     )
 
-# === MENÚ GRUPOS 8 HERRAMIENTAS ===
+# === MENÚS PERSONALIZADOS POR CURSO ===
+
 async def seleccionar_grupo_herramientas(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
         [InlineKeyboardButton("Las 8 Herramientas (#27)", url="https://t.me/+kdclZgGhr5JhMTkx")],
@@ -121,14 +106,49 @@ async def seleccionar_grupo_herramientas(update: Update, context: ContextTypes.D
         [InlineKeyboardButton("Las 8 Herramientas (#30)", url="https://t.me/+t3l__l5gEbk0ZWIx")],
         [InlineKeyboardButton("Las 8 Herramientas (#31)", url="https://t.me/+eJF-LF5Mq8AwNDMx")]
     ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
         "🎯 Escoge el grupo de 8 Herramientas al que perteneces:",
-        reply_markup=reply_markup
+        reply_markup=InlineKeyboardMarkup(keyboard)
     )
     return ConversationHandler.END
 
-# === SELECCIÓN DE CURSO ===
+async def seleccionar_grupo_googlear(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [InlineKeyboardButton("Googlear al Inconsciente (#23)", url="https://t.me/+NwqLxwUDpKA5ZThh")],
+        [InlineKeyboardButton("Googlear al Inconsciente (#24)", url="https://t.me/+lP9kZHBqE1VjYzM5")],
+        [InlineKeyboardButton("Googlear al Inconsciente (#25)", url="https://t.me/+E2OZLu95-qIxMWRh")]
+    ]
+    await update.message.reply_text(
+        "🎯 Escoge tu grupo de Método Googlear al Inconsciente:",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+    return ConversationHandler.END
+
+async def seleccionar_grupo_guerreros(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [InlineKeyboardButton("Guerreros Galácticos (#10)", url="https://t.me/+6XxTuQXYPuJmNzgx")],
+        [InlineKeyboardButton("Guerreros Galácticos (#11)", url="https://t.me/+4H-VAFU9Y9w3YWJh")],
+        [InlineKeyboardButton("Guerreros Galácticos (#12)", url="https://t.me/+uuRFBU2cDG4yOWRh")]
+    ]
+    await update.message.reply_text(
+        "🎯 Escoge tu grupo de Especialización Guerreros Galácticos:",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+    return ConversationHandler.END
+
+async def seleccionar_grupo_qmm360(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [InlineKeyboardButton("Formación QMM 360 (#01)", url="https://t.me/+CddrQ59ZuQgwZmQx")],
+        [InlineKeyboardButton("Formación QMM 360 (#02)", url="https://t.me/+NzM3K8X9MfwyMDhh")]
+    ]
+    await update.message.reply_text(
+        "🎯 Escoge tu grupo de Formación QMM 360:",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+    return ConversationHandler.END
+
+# === FLUJO DE CONVERSACIÓN ===
+
 async def seleccionar_curso(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -137,7 +157,6 @@ async def seleccionar_curso(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.message.reply_text("Por favor ingresa tu correo electrónico para continuar:")
     return ASK_EMAIL
 
-# === RECEPCIÓN Y VALIDACIÓN DEL CORREO ===
 async def recibir_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     correo = update.message.text.strip()
     user_id = update.effective_user.id
@@ -173,7 +192,6 @@ async def recibir_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(
             "📩 Te enviamos un correo con tu código de acceso.\n"
-            "Puede demorar hasta 5 minutos en llegar.\n"
             "Por favor ingrésalo aquí:"
         )
         return ASK_CODIGO
@@ -181,38 +199,39 @@ async def recibir_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("❌ Error con ActiveCampaign. Intenta más tarde.")
         return ConversationHandler.END
 
-# === VERIFICACIÓN DEL CÓDIGO ===
 async def verificar_codigo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     codigo_usuario = update.message.text.strip()
-    curso_id = curso_seleccionado.get(user_id, None)
-    mensaje_final = MENSAJES_FINAL.get(curso_id)
+    curso_id = curso_seleccionado.get(user_id)
 
     if user_id in codigo_temp and codigo_usuario == codigo_temp[user_id]:
+        # Limpiar
         codigo_temp.pop(user_id, None)
         intentos_codigo.pop(user_id, None)
 
+        # Submenús personalizados
         if curso_id == "curso_herramientas":
             return await seleccionar_grupo_herramientas(update, context)
-        elif mensaje_final:
-            await update.message.reply_text(mensaje_final)
-
-        curso_seleccionado.pop(user_id, None)
-        return ConversationHandler.END
+        elif curso_id == "curso_googlear":
+            return await seleccionar_grupo_googlear(update, context)
+        elif curso_id == "curso_guerreros":
+            return await seleccionar_grupo_guerreros(update, context)
+        elif curso_id == "curso_qmm360":
+            return await seleccionar_grupo_qmm360(update, context)
+        else:
+            mensaje = MENSAJES_FINAL.get(curso_id, "✅ Acceso otorgado.")
+            await update.message.reply_text(mensaje)
+            curso_seleccionado.pop(user_id, None)
+            return ConversationHandler.END
     else:
         intentos_codigo[user_id] += 1
         if intentos_codigo[user_id] >= 3:
-            await update.message.reply_text(
-                "⛔ 3 intentos incorrectos.\n¿Deseas corregir tu correo electrónico? (sí / no)"
-            )
+            await update.message.reply_text("⛔ 3 intentos incorrectos.\n¿Deseas corregir tu correo electrónico? (sí / no)")
             return ASK_EMAIL_CONFIRMACION
         else:
-            await update.message.reply_text(
-                f"⛔ Código incorrecto. Intento {intentos_codigo[user_id]} de 3. Intenta nuevamente:"
-            )
+            await update.message.reply_text(f"⛔ Código incorrecto. Intento {intentos_codigo[user_id]} de 3. Intenta nuevamente:")
             return ASK_CODIGO
 
-# === CONFIRMAR NUEVO CORREO ===
 async def confirmar_nuevo_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     respuesta = update.message.text.strip().lower()
     user_id = update.effective_user.id
@@ -227,12 +246,11 @@ async def confirmar_nuevo_correo(update: Update, context: ContextTypes.DEFAULT_T
         intentos_codigo.pop(user_id, None)
         return ConversationHandler.END
 
-# === CANCELACIÓN ===
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Operación cancelada.")
     return ConversationHandler.END
 
-# === INICIALIZAR BOT ===
+# === INICIALIZACIÓN DEL BOT ===
 application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
 conv_handler = ConversationHandler(
