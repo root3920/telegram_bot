@@ -38,6 +38,20 @@ MENSAJES_FINAL = {
     "curso_avanzadas": "✅ Acceso otorgado a Clases Avanzadas.\nhttps://t.me/+Pdkdc4Jc2Zo3OThh"
 }
 
+# === MENÚ COMPLETO DE CURSOS ===
+async def canales_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [InlineKeyboardButton("Membresía Mente Cuántica", callback_data="curso_mente")],
+        [InlineKeyboardButton("Método Googlear al Inconsciente (#25)", callback_data="curso_googlear")],
+        [InlineKeyboardButton("Especialización Guerreros Galácticos", callback_data="curso_guerreros")],
+        [InlineKeyboardButton("Clases Avanzadas", callback_data="curso_avanzadas")],
+        [InlineKeyboardButton("Formación QMM 360", callback_data="curso_qmm360")],
+        [InlineKeyboardButton("Diplomatura QM-M", callback_data="curso_diplomatura")],
+        [InlineKeyboardButton("Las 8 Herramientas", callback_data="curso_herramientas")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text("Selecciona el curso para ingresar al canal de Telegram:", reply_markup=reply_markup)
+
 # === VERIFICACIÓN EN HOTMART CON PAGINACIÓN ===
 def verificar_compra_hotmart(email: str) -> bool:
     try:
@@ -104,31 +118,17 @@ def agregar_a_automatizacion(contact_id, automation_id=AUTOMATION_ID):
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("👋 ¡Hola! Escribe /canales para ingresar a tu grupo de Telegram.")
 
-async def canales_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [
-        [InlineKeyboardButton("Membresía Mente Cuántica", callback_data="curso_mente")],
-        [InlineKeyboardButton("Diplomatura QM-M", callback_data="curso_diplomatura")],
-        [InlineKeyboardButton("Clases Avanzadas", callback_data="curso_avanzadas")],
-    ]
-    await update.message.reply_text("Selecciona tu curso:", reply_markup=InlineKeyboardMarkup(keyboard))
-
-async def seleccionar_curso(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
-    user_id = query.from_user.id
-    curso_seleccionado[user_id] = query.data
-    await query.message.reply_text("Por favor ingresa tu correo electrónico:")
-    return ASK_EMAIL
-
 # === FLUJO PRINCIPAL ===
 async def recibir_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     correo = update.message.text.strip()
     user_id = update.effective_user.id
 
-    if not re.match(r"^[^@]+@[^@]+\\.[^@]+$", correo):
+    # Validación de correo
+    if not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", correo):
         await update.message.reply_text("❌ Correo inválido. Ingresa un email válido:")
         return ASK_EMAIL
 
+    # Verificación en Hotmart
     await update.message.reply_text("🔎 Verificando tu compra en Hotmart...")
     if not verificar_compra_hotmart(correo):
         await update.message.reply_text(
@@ -138,6 +138,7 @@ async def recibir_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return ConversationHandler.END
 
+    # Si la compra es verificada, se procede
     codigo = str(random.randint(1000, 9999))
     codigo_temp[user_id] = codigo
     intentos_codigo[user_id] = 0
@@ -169,42 +170,3 @@ async def recibir_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text("❌ Hubo un problema al enviar el código.")
         return ConversationHandler.END
-
-async def verificar_codigo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
-    codigo_usuario = update.message.text.strip()
-    if user_id in codigo_temp and codigo_usuario == codigo_temp[user_id]:
-        mensaje = MENSAJES_FINAL.get(curso_seleccionado.get(user_id), "✅ Acceso otorgado.")
-        await update.message.reply_text(mensaje)
-        return ConversationHandler.END
-    else:
-        intentos_codigo[user_id] += 1
-        if intentos_codigo[user_id] >= 3:
-            await update.message.reply_text("⛔ 3 intentos incorrectos. Proceso cancelado.")
-            return ConversationHandler.END
-        else:
-            await update.message.reply_text("❌ Código incorrecto. Intenta nuevamente:")
-            return ASK_CODIGO
-
-async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("🚫 Proceso cancelado.")
-    return ConversationHandler.END
-
-# === INICIAR EL BOT ===
-if __name__ == "__main__":
-    application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
-
-    conv_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(seleccionar_curso)],
-        states={
-            ASK_EMAIL: [MessageHandler(filters.TEXT & ~filters.COMMAND, recibir_correo)],
-            ASK_CODIGO: [MessageHandler(filters.TEXT & ~filters.COMMAND, verificar_codigo)],
-        },
-        fallbacks=[CommandHandler("cancel", cancel)]
-    )
-
-    application.add_handler(CommandHandler("start", start_command))
-    application.add_handler(CommandHandler("canales", canales_command))
-    application.add_handler(conv_handler)
-
-    application.run_polling()
