@@ -1,36 +1,61 @@
-import os, requests
-from dotenv import load_dotenv
+import os
+import requests
 
-load_dotenv()
-API_URL = os.getenv("ACTIVE_CAMPAIGN_API_URL")
-API_TOKEN = os.getenv("ACTIVE_CAMPAIGN_API_TOKEN")
-TAG_ID = os.getenv("TAG_ID")
-AUTOMATION_ID = os.getenv("AUTOMATION_ID")
-CODIGO_CAMPO_ID = os.getenv("CODIGO_CAMPO_ID")
+ACTIVE_CAMPAIGN_API_URL = os.getenv("ACTIVE_CAMPAIGN_API_URL")
+ACTIVE_CAMPAIGN_API_TOKEN = os.getenv("ACTIVE_CAMPAIGN_API_TOKEN")
 
-def sync_contact(email, code):
-    url = f"{API_URL}/api/3/contact/sync"
-    headers = {"Api-Token": API_TOKEN, "Content-Type": "application/json"}
+def sync_contact(email: str, codigo: str):
+    """
+    Sincroniza un contacto en ActiveCampaign con un código personalizado.
+    """
+    url = f"{ACTIVE_CAMPAIGN_API_URL}/api/3/contact/sync"
+    headers = {
+        "Api-Token": ACTIVE_CAMPAIGN_API_TOKEN,
+        "Content-Type": "application/json"
+    }
     payload = {
         "contact": {
             "email": email,
-            "fieldValues": [{"field": CODIGO_CAMPO_ID, "value": code}]
+            "fieldValues": [
+                {"field": os.getenv("CODIGO_CAMPO_ID"), "value": codigo}
+            ]
         }
     }
-    res = requests.post(url, headers=headers, json=payload)
-    if res.status_code in (200, 201):
-        contact_id = res.json().get("contact", {}).get("id")
-        if contact_id:
-            add_tag(contact_id)
-            add_to_automation(contact_id)
-    return res.status_code
+    response = requests.post(url, headers=headers, json=payload)
+    return response.status_code
 
-def add_tag(contact_id):
-    url = f"{API_URL}/api/3/contactTags"
-    headers = {"Api-Token": API_TOKEN, "Content-Type": "application/json"}
-    requests.post(url, headers=headers, json={"contactTag": {"contact": contact_id, "tag": TAG_ID}})
+def asignar_etiqueta(contact_id: int, tag_id: int):
+    """
+    Asigna una etiqueta (tag) a un contacto en ActiveCampaign.
+    """
+    url = f"{ACTIVE_CAMPAIGN_API_URL}/api/3/contactTags"
+    headers = {
+        "Api-Token": ACTIVE_CAMPAIGN_API_TOKEN,
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "contactTag": {
+            "contact": contact_id,
+            "tag": tag_id
+        }
+    }
+    response = requests.post(url, headers=headers, json=payload)
+    return response.status_code
 
-def add_to_automation(contact_id):
-    url = f"{API_URL}/api/3/contactAutomations"
-    headers = {"Api-Token": API_TOKEN, "Content-Type": "application/json"}
-    requests.post(url, headers=headers, json={"contactAutomation": {"contact": contact_id, "automation": AUTOMATION_ID}})
+def agregar_a_automatizacion(contact_id: int, automation_id: int):
+    """
+    Agrega un contacto a una automatización específica en ActiveCampaign.
+    """
+    url = f"{ACTIVE_CAMPAIGN_API_URL}/api/3/contactAutomations"
+    headers = {
+        "Api-Token": ACTIVE_CAMPAIGN_API_TOKEN,
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "contactAutomation": {
+            "contact": str(contact_id),
+            "automation": str(automation_id)
+        }
+    }
+    response = requests.post(url, headers=headers, json=payload)
+    return response.status_code
