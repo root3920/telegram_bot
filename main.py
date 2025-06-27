@@ -38,7 +38,7 @@ MENSAJES_FINAL = {
     "curso_avanzadas": "✅ Acceso otorgado a Clases Avanzadas.\nhttps://t.me/+Pdkdc4Jc2Zo3OThh"
 }
 
-# === VERIFICACIÓN EN HOTMART ===
+# === VERIFICACIÓN EN HOTMART CON DEPURACIÓN ===
 def verificar_compra_hotmart(email: str) -> bool:
     try:
         basic_token = base64.b64encode(f"{HOTMART_CLIENT_ID}:{HOTMART_CLIENT_SECRET}".encode()).decode()
@@ -63,44 +63,50 @@ def verificar_compra_hotmart(email: str) -> bool:
         params = {"transaction_status": "APPROVED"}
         url = "https://developers.hotmart.com/payments/api/v1/sales/history"
 
+        total_ventas = 0
+        pagina = 1
+
         while True:
+            print(f"🔄 Consultando página {pagina} de ventas...")
             response = requests.get(url, headers=headers, params=params)
             response.raise_for_status()
             data = response.json()
 
-            for venta in data.get("items", []):
-                if venta.get("buyer", {}).get("email", "").strip().lower() == email.strip().lower():
+            items = data.get("items", [])
+            total_ventas += len(items)
+
+            for venta in items:
+                correo_venta = venta.get("buyer", {}).get("email", "").strip().lower()
+                print(f"🔍 Comparando: {correo_venta} == {email.strip().lower()}")
+                if correo_venta == email.strip().lower():
+                    print("✅ Email encontrado")
                     return True
 
             next_token = data.get("page_info", {}).get("next_page_token")
             if not next_token:
                 break
             params["page_token"] = next_token
+            pagina += 1
 
+        print(f"❌ Email no encontrado tras revisar {pagina} página(s) con {total_ventas} ventas.")
     except Exception as e:
         print("❌ Error verificando compra en Hotmart:", e)
     return False
 
-# === ACTIVE CAMPAIGN ===
+# === FUNCIONES ACTIVE CAMPAIGN ===
 def asignar_etiqueta(contact_id, tag_id):
     url = f"{ACTIVE_CAMPAIGN_API_URL}/api/3/contactTags"
-    headers = {
-        "Api-Token": ACTIVE_CAMPAIGN_API_TOKEN,
-        "Content-Type": "application/json"
-    }
+    headers = {"Api-Token": ACTIVE_CAMPAIGN_API_TOKEN}
     payload = {"contactTag": {"contact": contact_id, "tag": tag_id}}
     requests.post(url, headers=headers, json=payload)
 
 def agregar_a_automatizacion(contact_id, automation_id=AUTOMATION_ID):
     url = f"{ACTIVE_CAMPAIGN_API_URL}/api/3/contactAutomations"
-    headers = {
-        "Api-Token": ACTIVE_CAMPAIGN_API_TOKEN,
-        "Content-Type": "application/json"
-    }
+    headers = {"Api-Token": ACTIVE_CAMPAIGN_API_TOKEN}
     payload = {"contactAutomation": {"contact": str(contact_id), "automation": str(automation_id)}}
     requests.post(url, headers=headers, json=payload)
 
-# === COMANDOS ===
+# === BOT FLUJO ===
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("👋 ¡Hola! Escribe /canales para ingresar a tu grupo de Telegram.")
 
@@ -114,8 +120,8 @@ async def canales_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("Diplomatura QM-M", callback_data="curso_diplomatura")],
         [InlineKeyboardButton("Las 8 Herramientas", callback_data="curso_herramientas")]
     ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("Selecciona el curso para ingresar al canal de Telegram:", reply_markup=reply_markup)
+    await update.message.reply_text("Selecciona el curso para ingresar al canal de Telegram:",
+                                    reply_markup=InlineKeyboardMarkup(keyboard))
 
 async def seleccionar_curso(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -129,17 +135,15 @@ async def recibir_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     correo = update.message.text.strip()
     user_id = update.effective_user.id
 
-    if not re.match(r"^[^@]+@[^@]+\.[^@]+$", correo):
-        await update.message.reply_text("❌ Correo inválido. Ingresa un email válido:")
-        return ASK_EMAIL
+    if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", correo):
+     await update.message.reply_text("❌ Correo inválido. Ingresa un email válido:")
+     return ASK_EMAIL
 
     await update.message.reply_text("🔎 Verificando tu compra en Hotmart...")
     if not verificar_compra_hotmart(correo):
         await update.message.reply_text(
             "❌ No encuentro tu email en la lista de inscriptos del curso.\n"
-            "📧 Por favor revisa si escribiste bien tu email.\n"
-            "🆘 Si el problema persiste, contactate con el equipo de soporte enviando un email a:\n"
-            "**estudiantes@rosannabiglia.com**"
+            "📧 Revisa si lo escribiste bien o contáctanos: estudiantes@rosannabiglia.com"
         )
         return ConversationHandler.END
 
@@ -148,10 +152,7 @@ async def recibir_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     intentos_codigo[user_id] = 0
 
     url = f"{ACTIVE_CAMPAIGN_API_URL}/api/3/contact/sync"
-    headers = {
-        "Api-Token": ACTIVE_CAMPAIGN_API_TOKEN,
-        "Content-Type": "application/json"
-    }
+    headers = {"Api-Token": ACTIVE_CAMPAIGN_API_TOKEN}
     payload = {
         "contact": {
             "email": correo,
@@ -160,8 +161,7 @@ async def recibir_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     }
     response = requests.post(url, headers=headers, json=payload)
     if response.status_code in (200, 201):
-        contact_data = response.json().get("contact", {})
-        contact_id = contact_data.get("id")
+        contact_id = response.json().get("contact", {}).get("id")
         if contact_id:
             asignar_etiqueta(contact_id, TAG_ID)
             agregar_a_automatizacion(contact_id)
@@ -232,10 +232,10 @@ application.add_handler(CommandHandler("start", start_command))
 application.add_handler(CommandHandler("canales", canales_command))
 application.add_handler(conv_handler)
 
-# === HANDLER PARA MENSAJES FUERA DE FLUJO ===
-async def mensaje_fuera_de_flujo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("🔄 Usa el comando /canales para comenzar de nuevo.")
+# Opcional: Captura todo lo demás fuera del flujo
+async def fuera_de_flujo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("🌀 Usa el comando /canales para comenzar.")
 
-application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, mensaje_fuera_de_flujo))
+application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, fuera_de_flujo))
 
 application.run_polling()
