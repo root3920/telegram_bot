@@ -31,81 +31,37 @@ codigo_temp = {}
 curso_seleccionado = {}
 intentos_codigo = {}
 
-# Mensajes finales por curso
+# Mensajes finales por curso (mensaje, enlace)
 MENSAJES_FINAL = {
     "curso_mente": (
-        "✅ Acceso otorgado a Membresía Mente Cuántica.\n"
-        "Ingresa con este enlace:\nhttps://t.me/+nK7IjKHXsHw3NzIx"
+        "Únete al grupo de Membresía Mente Cuántica ¡Te esperamos adentro!",
+        "https://t.me/+nK7IjKHXsHw3NzIx"
     ),
     "curso_googlear": (
-        "✅ Acceso otorgado a Método Googlear al Inconsciente (#25).\n"
-        "Ingresa con este enlace:\nhttps://t.me/+E2OZLu95-qIxMWRh"
+        "Únete al grupo de Método Googlear al Inconsciente ¡Te esperamos adentro!",
+        "https://t.me/+58wyo4985tFhZjZh"
     ),
     "curso_guerreros": (
-        "✅ Acceso otorgado a Especialización Guerreros Galácticos.\n"
-        "Ingresa con estos grupos:\n"
-        "https://t.me/+6XxTuQXYPuJmNzgx\n"
-        "https://t.me/+4H-VAFU9Y9w3YWJh\n"
+        "Únete al grupo de Especialización Guerreros Galácticos ¡Te esperamos adentro!",
         "https://t.me/+uuRFBU2cDG4yOWRh"
     ),
     "curso_avanzadas": (
-        "✅ Acceso otorgado a Clases Avanzadas.\n"
-        "Ingresa con este enlace:\nhttps://t.me/+Pdkdc4Jc2Zo3OThh"
+        "Únete al grupo de Clases Avanzadas ¡Te esperamos adentro!",
+        "https://t.me/+Pdkdc4Jc2Zo3OThh"
     ),
     "curso_qmm360": (
-        "✅ Acceso otorgado a Formación QMM 360.\n"
-        "Ingresa con estos grupos:\n"
-        "https://t.me/+CddrQ59ZuQgwZmQx\n"
+        "Únete al grupo de Formación QMM 360 ¡Te esperamos adentro!",
         "https://t.me/+NzM3K8X9MfwyMDhh"
     ),
     "curso_diplomatura": (
-        "✅ Acceso otorgado a Diplomatura QM-M.\n"
-        "Ingresa con este enlace:\nhttps://t.me/+6d8N1Si4N0EwMTMx"
+        "Únete al grupo de Diplomatura QM-M ¡Te esperamos adentro!",
+        "https://t.me/+6d8N1Si4N0EwMTMx"
     ),
-    "curso_herramientas": None  # Tiene submenú especial
+    "curso_herramientas": (
+        "Únete al grupo de Las 8 Herramientas ¡Te esperamos adentro!",
+        "https://t.me/+eJF-LF5Mq8AwNDMx"
+    )
 }
-
-# Submenús para cursos con múltiples grupos
-async def seleccionar_grupo_herramientas(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [
-        [InlineKeyboardButton("Las 8 Herramientas (#27)", url="https://t.me/+kdclZgGhr5JhMTkx")],
-        [InlineKeyboardButton("Las 8 Herramientas (#28)", url="https://t.me/+tFJ3rECCPuAxMTAx")],
-        [InlineKeyboardButton("Las 8 Herramientas (#29)", url="https://t.me/+SRSGg3cA8wVkOWNh")],
-        [InlineKeyboardButton("Las 8 Herramientas (#30)", url="https://t.me/+t3l__l5gEbk0ZWIx")],
-        [InlineKeyboardButton("Las 8 Herramientas (#31)", url="https://t.me/+eJF-LF5Mq8AwNDMx")]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("🎯 Escoge el grupo de 8 Herramientas al que perteneces:", reply_markup=reply_markup)
-    return ConversationHandler.END
-
-async def seleccionar_grupo_googlear(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [
-        [InlineKeyboardButton("Googlear al Inconsciente (#23)", url="https://t.me/+NwqLxwUDpKA5ZThh")],
-        [InlineKeyboardButton("Googlear al Inconsciente (#24)", url="https://t.me/+lP9kZHBqE1VjYzM5")],
-        [InlineKeyboardButton("Googlear al Inconsciente (#25)", url="https://t.me/+E2OZLu95-qIxMWRh")]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("🎯 Escoge tu grupo de Método Googlear al Inconsciente:", reply_markup=reply_markup)
-    return ConversationHandler.END
-
-async def seleccionar_grupo_guerreros(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [
-        [InlineKeyboardButton("Guerreros Galácticos (#10)", url="https://t.me/+6XxTuQXYPuJmNzgx")],
-        [InlineKeyboardButton("Guerreros Galácticos (#11)", url="https://t.me/+4H-VAFU9Y9w3YWJh")],
-        [InlineKeyboardButton("Guerreros Galácticos (#12)", url="https://t.me/+uuRFBU2cDG4yOWRh")]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("🎯 Escoge tu grupo de Especialización Guerreros Galácticos:", reply_markup=reply_markup)
-    return ConversationHandler.END
-
-async def seleccionar_grupo_qmm360(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [
-        [InlineKeyboardButton("Formación QMM 360 (#01)", url="https://t.me/+CddrQ59ZuQgwZmQx")],
-        [InlineKeyboardButton("Formación QMM 360 (#02)", url="https://t.me/+NzM3K8X9MfwyMDhh")]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("🎯 Escoge tu grupo de Formación QMM 360:", reply_markup=reply_markup)
-    return ConversationHandler.END
 
 # Funciones para ActiveCampaign
 def asignar_etiqueta(contact_id, tag_id):
@@ -146,7 +102,7 @@ def sync_contact(email: str, codigo: str) -> int:
     response = requests.post(url, headers=headers, json=payload)
     return response.status_code
 
-# Función para verificar compra en Hotmart (paginando)
+# Verificación de compra en Hotmart
 def verificar_compra_hotmart(email: str) -> bool:
     try:
         basic_token = base64.b64encode(f"{HOTMART_CLIENT_ID}:{HOTMART_CLIENT_SECRET}".encode()).decode()
@@ -196,7 +152,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def canales_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
         [InlineKeyboardButton("Membresía Mente Cuántica", callback_data="curso_mente")],
-        [InlineKeyboardButton("Método Googlear al Inconsciente (#25)", callback_data="curso_googlear")],
+        [InlineKeyboardButton("Método Googlear al Inconsciente", callback_data="curso_googlear")],
         [InlineKeyboardButton("Especialización Guerreros Galácticos", callback_data="curso_guerreros")],
         [InlineKeyboardButton("Clases Avanzadas", callback_data="curso_avanzadas")],
         [InlineKeyboardButton("Formación QMM 360", callback_data="curso_qmm360")],
@@ -239,7 +195,6 @@ async def recibir_correo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     status = sync_contact(correo, codigo)
     if status in (200, 201):
-        # Obtener ID de contacto para asignar etiqueta y agregar a automatización
         url_contact = f"{ACTIVE_CAMPAIGN_API_URL}/api/3/contacts?email={correo}"
         headers = {"Api-Token": ACTIVE_CAMPAIGN_API_TOKEN}
         response = requests.get(url_contact, headers=headers)
@@ -267,21 +222,17 @@ async def verificar_codigo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if user_id in codigo_temp and codigo_usuario == codigo_temp[user_id]:
         codigo_temp.pop(user_id, None)
         intentos_codigo.pop(user_id, None)
+        curso_seleccionado.pop(user_id, None)
 
-        # Mostrar mensaje o submenú según curso
-        if curso_id == "curso_herramientas":
-            return await seleccionar_grupo_herramientas(update, context)
-        elif curso_id == "curso_googlear":
-            return await seleccionar_grupo_googlear(update, context)
-        elif curso_id == "curso_guerreros":
-            return await seleccionar_grupo_guerreros(update, context)
-        elif curso_id == "curso_qmm360":
-            return await seleccionar_grupo_qmm360(update, context)
+        mensaje, enlace = MENSAJES_FINAL.get(curso_id, ("✅ Acceso otorgado.", None))
+        if enlace:
+            keyboard = [[InlineKeyboardButton("👉 Unirme al grupo", url=enlace)]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            await update.message.reply_text(mensaje, reply_markup=reply_markup)
         else:
-            mensaje = MENSAJES_FINAL.get(curso_id, "✅ Acceso otorgado.")
             await update.message.reply_text(mensaje)
-            curso_seleccionado.pop(user_id, None)
-            return ConversationHandler.END
+
+        return ConversationHandler.END
     else:
         intentos_codigo[user_id] += 1
         if intentos_codigo[user_id] >= 3:
@@ -308,7 +259,6 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Operación cancelada.")
     return ConversationHandler.END
 
-# Handler para mensajes fuera de flujo
 async def mensaje_fuera_de_flujo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("🔄 Usa el comando /canales para comenzar de nuevo.")
 
