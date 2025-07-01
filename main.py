@@ -220,17 +220,26 @@ async def verificar_codigo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     curso_id = curso_seleccionado.get(user_id)
 
     if user_id in codigo_temp and codigo_usuario == codigo_temp[user_id]:
+        # Limpiar datos temporales
         codigo_temp.pop(user_id, None)
         intentos_codigo.pop(user_id, None)
         curso_seleccionado.pop(user_id, None)
 
         mensaje, enlace = MENSAJES_FINAL.get(curso_id, ("✅ Acceso otorgado.", None))
+        
         if enlace:
-            keyboard = [[InlineKeyboardButton("👉 Unirme al grupo", url=enlace)]]
+            keyboard = [
+                [InlineKeyboardButton("👉 Unirme al grupo", url=enlace)],
+                [InlineKeyboardButton("💬 Hablar con soporte", url="http://t.me/soporteqmm")]
+            ]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await update.message.reply_text(mensaje, reply_markup=reply_markup)
         else:
-            await update.message.reply_text(mensaje)
+            keyboard = [
+                [InlineKeyboardButton("💬 Hablar con soporte", url="http://t.me/soporteqmm")]
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            await update.message.reply_text(mensaje, reply_markup=reply_markup)
 
         return ConversationHandler.END
     else:
