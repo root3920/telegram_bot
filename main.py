@@ -44,7 +44,7 @@ MENSAJES_FINAL = {
     ),
     "curso_guerreros": (
         "Únete al grupo de Especialización Guerreros Galácticos ¡Te esperamos adentro!",
-        "https://t.me/+uuRFBU2cDG4yOWRh"
+        "https://t.me/+nWmDrfVb_XZkZmMx"
     ),
     "curso_avanzadas": (
         "Únete al grupo de Clases Avanzadas ¡Te esperamos adentro!",
