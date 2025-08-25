@@ -60,7 +60,7 @@ MENSAJES_FINAL = {
     ),
     "curso_herramientas": (
         "Únete al grupo de Las 8 Herramientas ¡Te esperamos adentro!",
-        "https://t.me/+eJF-LF5Mq8AwNDMx"
+        "https://t.me/+HobEI09THppiNGQ5"
     )
 }
 
