@@ -1,4 +1,4 @@
-import os
+    import os
 import re
 import random
 import base64
@@ -180,7 +180,7 @@ async def canales_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("Clases Avanzadas", callback_data="curso_avanzadas")],
         [InlineKeyboardButton("Formación QMM 360", callback_data="curso_qmm360")],
         [InlineKeyboardButton("Diplomatura QM-M", callback_data="curso_diplomatura")],
-        [InlineKeyboardButton("Las 8 Herramientas", callback_data="curso_herramientas")]
+        [InlineKeyboardButton("Las 8 Herramientas", callback_data="curso_herramientas")],
         [InlineKeyboardButton("Inmersión: QMM Team", callback_data="curso_team")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
