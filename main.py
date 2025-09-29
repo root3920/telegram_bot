@@ -61,6 +61,10 @@ MENSAJES_FINAL = {
     "curso_herramientas": (
         "Únete al grupo de Las 8 Herramientas ¡Te esperamos adentro!",
         "https://t.me/+HobEI09THppiNGQ5"
+    ),
+     "curso_team": (
+        "Únete al grupo de Inmersión: QMM Team ¡Te esperamos adentro!",
+        "https://t.me/+0qT2qhflR0pjNmM5"
     )
 }
 
@@ -72,7 +76,8 @@ SUBDOMINIOS_CURSO = {
     "curso_herramientas": "codigoabundancia",
     "curso_guerreros": "guerrerosgalacticosqmm",
     "curso_avanzadas": "comunidadqmm",
-    "curso_diplomatura": "diplomaturaterapeutaquantummin"
+    "curso_diplomatura": "diplomaturaterapeutaquantummin",
+    "curso_team": "quantumteam"
 }
 
 # ==================== FUNCIONES EXTERNAS =====================
@@ -176,6 +181,7 @@ async def canales_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("Formación QMM 360", callback_data="curso_qmm360")],
         [InlineKeyboardButton("Diplomatura QM-M", callback_data="curso_diplomatura")],
         [InlineKeyboardButton("Las 8 Herramientas", callback_data="curso_herramientas")]
+        [InlineKeyboardButton("Inmersión: QMM Team", callback_data="curso_team")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text("Selecciona el curso para ingresar al canal de Telegram:", reply_markup=reply_markup)
