@@ -60,7 +60,7 @@ MENSAJES_FINAL = {
     ),
     "curso_herramientas": (
         "Únete al grupo de Las 8 Herramientas ¡Te esperamos adentro!",
-        "https://t.me/+o-HP442r7FAxNjdh"
+        "https://t.me/+KDMzQQBFerNhN2Qx"
     ),
      "curso_team": (
         "Únete al grupo de Inmersión: QMM Team ¡Te esperamos adentro!",
