@@ -40,7 +40,7 @@ MENSAJES_FINAL = {
     ),
     "curso_googlear": (
         "Únete al grupo de Método Googlear al Inconsciente ¡Te esperamos adentro!",
-        "https://t.me/+0ftikv4xnmJlZTkx"
+        "https://t.me/+0vEkwBr4ah9hZjUx"
     ),
     "curso_guerreros": (
         "Únete al grupo de Especialización Guerreros Galácticos ¡Te esperamos adentro!",
