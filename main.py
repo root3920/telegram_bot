@@ -52,7 +52,7 @@ MENSAJES_FINAL = {
     ),
     "curso_qmm360": (
         "Únete al grupo de Formación QMM 360 ¡Te esperamos adentro!",
-        "https://web.telegram.org/a/#-1004408377213"
+        "https://t.me/+UkG9_HpazxU0Mjc5"
     ),
     "curso_diplomatura": (
         "Únete al grupo de Diplomatura QM-M ¡Te esperamos adentro!",
