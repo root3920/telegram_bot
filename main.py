@@ -56,7 +56,7 @@ MENSAJES_FINAL = {
     ),
     "curso_diplomatura": (
         "Únete al grupo de Diplomatura QM-M ¡Te esperamos adentro!",
-        "https://t.me/+6d8N1Si4N0EwMTMx"
+        "https://t.me/+065R3rsBPS80MDcx"
     ),
     "curso_herramientas": (
         "Únete al grupo de Las 8 Herramientas ¡Te esperamos adentro!",
