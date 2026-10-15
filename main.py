@@ -64,7 +64,7 @@ MENSAJES_FINAL = {
     ),
      "curso_team": (
         "Únete al grupo de Inmersión: QMM Team ¡Te esperamos adentro!",
-        "https://t.me/+e0c68BXsfbM0Mjkx"
+        "https://t.me/+onlf0AJO3hBjY2Ux"
     ),
         "experiencia_cuantica": (
         "Únete al grupo de Experiencias Cuánticas ¡Te esperamos adentro!",
