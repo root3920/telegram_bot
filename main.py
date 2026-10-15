@@ -76,7 +76,7 @@ MENSAJES_FINAL = {
 ),
     "mentoria_empresa": (
     "Únete al grupo de Mentoría Empresa Cuántica ¡Te esperamos adentro!",
-    "https://t.me/+9XHuiveg7pllYjY5"
+    "https://t.me/+cxZ2hlCxVp8xMGQx"
     )
 }
 
