@@ -68,7 +68,7 @@ MENSAJES_FINAL = {
     ),
         "experiencia_cuantica": (
         "Únete al grupo de Experiencias Cuánticas ¡Te esperamos adentro!",
-        "https://t.me/+0qT2qhflR0pjNmM5"
+        "https://t.me/+cxZ2hlCxVp8xMGQx"
     ),
     "curso_decretos": (
     "Únete al grupo de Decretos 2.0 ¡Te esperamos adentro!",
